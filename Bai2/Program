@@ -1,0 +1,266 @@
+using System;
+using System.Collections.Generic;
+
+namespace AutoSpeed
+{
+    internal class Program
+    {
+        static QuanLyPhuongTien quanLy = new QuanLyPhuongTien();
+
+        static void Main(string[] args)
+        {
+            int luaChon;
+
+            do
+            {
+                HienThiMenu();
+
+                Console.Write("Nhập lựa chọn: ");
+                luaChon = int.Parse(Console.ReadLine());
+
+                Console.WriteLine();
+
+                switch (luaChon)
+                {
+                    case 1:
+                        ThemOTo();
+                        break;
+
+                    case 2:
+                        ThemXeMay();
+                        break;
+
+                    case 3:
+                        quanLy.DisplayAll();
+                        break;
+
+                    case 4:
+                        TimGiaCaoNhat();
+                        break;
+
+                    case 5:
+                        TimTheoTenHang();
+                        break;
+
+                    case 0:
+                        Console.WriteLine("Đã thoát chương trình!");
+                        break;
+
+                    default:
+                        Console.WriteLine(
+                            "Lựa chọn không hợp lệ!");
+                        break;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine(
+                    "Nhấn Enter để tiếp tục...");
+                Console.ReadLine();
+
+            } while (luaChon != 0);
+        }
+
+
+        // ==========================================
+        // HIỂN THỊ MENU
+        // ==========================================
+
+        static void HienThiMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("======================================");
+            Console.WriteLine("       HỆ THỐNG AUTOSPEED");
+            Console.WriteLine("======================================");
+            Console.WriteLine("1. Thêm ô tô");
+            Console.WriteLine("2. Thêm xe máy");
+            Console.WriteLine("3. Hiển thị tất cả phương tiện");
+            Console.WriteLine("4. Tìm phương tiện giá lăn bánh cao nhất");
+            Console.WriteLine("5. Tìm phương tiện theo tên hãng");
+            Console.WriteLine("0. Thoát");
+            Console.WriteLine("======================================");
+        }
+
+
+        // ==========================================
+        // THÊM Ô TÔ
+        // ==========================================
+
+        static void ThemOTo()
+        {
+            try
+            {
+                Console.WriteLine("===== THÊM Ô TÔ =====");
+
+                Console.Write("Nhập mã phương tiện: ");
+                string maPT = Console.ReadLine();
+
+                Console.Write("Nhập tên hãng: ");
+                string tenHang = Console.ReadLine();
+
+                Console.Write("Nhập năm sản xuất: ");
+                int namSanXuat =
+                    int.Parse(Console.ReadLine());
+
+                Console.Write("Nhập giá gốc: ");
+                decimal giaGoc =
+                    decimal.Parse(Console.ReadLine());
+
+                Console.Write("Nhập số chỗ ngồi: ");
+                int soChoNgoi =
+                    int.Parse(Console.ReadLine());
+
+                Console.Write("Nhập dung tích động cơ (L): ");
+                double dungTichDongCo =
+                    double.Parse(Console.ReadLine());
+
+                OTo oto = new OTo(
+                    maPT,
+                    tenHang,
+                    namSanXuat,
+                    giaGoc,
+                    soChoNgoi,
+                    dungTichDongCo);
+
+                quanLy.AddPhuongTien(oto);
+
+                Console.WriteLine();
+                Console.WriteLine(
+                    "Thêm ô tô thành công!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine(
+                    "LỖI: " + ex.Message);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine();
+                Console.WriteLine(
+                    "LỖI: Dữ liệu nhập không đúng định dạng!");
+            }
+        }
+
+
+        // ==========================================
+        // THÊM XE MÁY
+        // ==========================================
+
+        static void ThemXeMay()
+        {
+            try
+            {
+                Console.WriteLine("===== THÊM XE MÁY =====");
+
+                Console.Write("Nhập mã phương tiện: ");
+                string maPT = Console.ReadLine();
+
+                Console.Write("Nhập tên hãng: ");
+                string tenHang = Console.ReadLine();
+
+                Console.Write("Nhập năm sản xuất: ");
+                int namSanXuat =
+                    int.Parse(Console.ReadLine());
+
+                Console.Write("Nhập giá gốc: ");
+                decimal giaGoc =
+                    decimal.Parse(Console.ReadLine());
+
+                Console.Write("Nhập dung tích xi-lanh (cc): ");
+                int dungTichXylanh =
+                    int.Parse(Console.ReadLine());
+
+                XeMay xeMay = new XeMay(
+                    maPT,
+                    tenHang,
+                    namSanXuat,
+                    giaGoc,
+                    dungTichXylanh);
+
+                quanLy.AddPhuongTien(xeMay);
+
+                Console.WriteLine();
+                Console.WriteLine(
+                    "Thêm xe máy thành công!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine(
+                    "LỖI: " + ex.Message);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine();
+                Console.WriteLine(
+                    "LỖI: Dữ liệu nhập không đúng định dạng!");
+            }
+        }
+
+
+        // ==========================================
+        // TÌM GIÁ LĂN BÁNH CAO NHẤT
+        // ==========================================
+
+        static void TimGiaCaoNhat()
+        {
+            PhuongTien pt =
+                quanLy.FindMaxGiaLanBanh();
+
+            if (pt == null)
+            {
+                Console.WriteLine(
+                    "Danh sách phương tiện đang trống!");
+                return;
+            }
+
+            Console.WriteLine(
+                "===== PHƯƠNG TIỆN CÓ GIÁ LĂN BÁNH CAO NHẤT =====");
+
+            Console.WriteLine(pt.GetInfo());
+
+            Console.WriteLine(
+                $"Giá lăn bánh: " +
+                $"{pt.TinhGiaLanBanh():N0} VNĐ");
+        }
+
+
+        // ==========================================
+        // TÌM THEO TÊN HÃNG
+        // ==========================================
+
+        static void TimTheoTenHang()
+        {
+            Console.Write("Nhập tên hãng cần tìm: ");
+            string keyword = Console.ReadLine();
+
+            List<PhuongTien> ketQua =
+                quanLy.SearchByName(keyword);
+
+            Console.WriteLine();
+
+            if (ketQua.Count == 0)
+            {
+                Console.WriteLine(
+                    "Không tìm thấy phương tiện!");
+                return;
+            }
+
+            Console.WriteLine(
+                "===== KẾT QUẢ TÌM KIẾM =====");
+
+            foreach (PhuongTien pt in ketQua)
+            {
+                Console.WriteLine(pt.GetInfo());
+
+                Console.WriteLine(
+                    $"Giá lăn bánh: " +
+                    $"{pt.TinhGiaLanBanh():N0} VNĐ");
+
+                Console.WriteLine(
+                    "--------------------------------");
+            }
+        }
+    }
+}
